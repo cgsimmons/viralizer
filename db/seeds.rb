@@ -5,3 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# Test seeds
+5.times do
+  Post.create(ups: (rand(10) + 5), downs: (rand(10) + 5),
+              post_date: Faker::Time.between(5.years.ago, Date.today, :all),
+              post_id: ((rand(1000) + 5).to_s + Faker::GameOfThrones.house))
+end
