@@ -4,7 +4,7 @@ class CreatePosts < ActiveRecord::Migration[5.0]
       t.datetime :post_date
       t.integer :ups
       t.integer :downs
-      t.string :post_id
+      t.string :reddit_id
 
       t.timestamps
     end

@@ -8,7 +8,13 @@
 
 # Test seeds
 5.times do
+  puts Subreddit.create(name: Faker::GameOfThrones.house,
+                   reddit_id: Faker::Cat.name + (rand(10) + 1).to_s)
+end
+
+5.times do
   Post.create(ups: (rand(10) + 5), downs: (rand(10) + 5),
               post_date: Faker::Time.between(5.years.ago, Date.today, :all),
-              post_id: ((rand(1000) + 5).to_s + Faker::GameOfThrones.house))
+              reddit_id: ((rand(1000) + 5).to_s + Faker::GameOfThrones.house),
+              subreddit: Subreddit.all.sample)
 end
