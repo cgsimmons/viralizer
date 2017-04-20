@@ -21,7 +21,7 @@ class AnalysisController < ApplicationController
                         ups: data['ups'],
                         downs: data['downs'],
                         reddit_id: data['name'],
-                        post_date: data['created_utc'] }
+                        post_date_ts: data['created_utc'] }
         sub = Subreddit.find_by(reddit_id: subreddit_params[:reddit_id])
         sub = Subreddit.new(subreddit_params) if sub.nil?
         # sub.save
