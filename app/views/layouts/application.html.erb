@@ -15,9 +15,18 @@
     <div id="main-container" class="container-fluid">
       <div class="row">
         <div class="col-xs-12">
-          <% flash.each do |name, msg| -%>
-            <%= content_tag :div, msg, class: "alert alert-#{name}" %>
-          <% end -%>
+          <% if notice || alert %>
+            <div class="alert alert-<%=notice ? "success" : "danger"  %> alert-dismissable" role="alert">
+              <%= notice || alert %>
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+          <% end %>
         </div>
       </div>
       <div class="row">
