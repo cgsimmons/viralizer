@@ -1,6 +1,13 @@
 <div class="row">
   <div class="col-xs-12 col-sm-8 col-sm-offset-1">
-    <%= form_tag analysis_index_path, method: 'get', id: 'search-form' do %>
+    <%= simple_form_for @analysis,
+        html: { class: 'form-horizontal' },
+        url: analysis_index_path do |f| %>
+      <%= f.input :subreddit %>
+      <%= f.input :min_upvotes %>
+      <%= f.button :submit %>
+    <% end %>
+    <!-- <%= form_tag analysis_index_path, method: 'get', id: 'search-form' do %>
       <div>
         <%= label_tag :subreddit %>
         <%= text_field_tag :subreddit,
@@ -17,6 +24,6 @@
       <div>
         <%= submit_tag "Analyze", class: 'btn btn-default' %>
       </div>
-    <% end %>
+    <% end %> -->
   </div>
 </div>

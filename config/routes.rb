@@ -3,5 +3,5 @@ Rails.application.routes.draw do
 
   root 'home#index'
 
-  resources :analysis, only: [:index]
+  resources :analysis, only: [:index, :create]
 end
