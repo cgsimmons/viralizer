@@ -11,6 +11,7 @@ class AnalysisController < ApplicationController
         subreddit: @analysis.subreddit,
         min_upvotes: @analysis.min_upvotes
       ).listings
+      byebug
       puts reddits
     else
       flash.now[:alert] = 'Please complete the form below.'

@@ -33,8 +33,8 @@ gem 'jbuilder', '~> 2.5'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass', '~>3.3'
 gem 'font-awesome-rails'
-gem 'simple_form'
 gem 'reddit-api'
+gem 'simple_form'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
