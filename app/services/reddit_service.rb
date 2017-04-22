@@ -2,10 +2,13 @@
 require 'reddit/api'
 # Service to connect to reddit api
 class RedditService
-  def initialize(params)
-    @subreddit = params[:subreddit]
-    @min_upvotes = params[:min_upvotes]
+  def initialize
     @session = sign_in
+  end
+
+  def update_params(params)
+    @subreddit = params[:subreddit]
+    @min_upvotes = params[:min_upvotes].to_i
   end
 
   def sign_in
@@ -18,9 +21,15 @@ class RedditService
   end
 
   def listings
-    Reddit::Services::Listings.batch_new @session,
-                                         basepath_subreddit: @subreddit,
-                                         page_size: 2,
-                                         max_size: 5
+    begin
+      l = Reddit::Services::Listings.batch_hot @session,
+                                               basepath_subreddit: @subreddit,
+                                               page_size: 100,
+                                               max_size: 500
+    rescue RestClient::ExceptionWithResponse => err
+      puts "Reddit API Error: #{err}"
+      return nil
+    end
+    l.select { |post| post['data']['ups'].to_i > @min_upvotes }
   end
 end

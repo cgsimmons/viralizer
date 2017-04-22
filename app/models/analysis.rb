@@ -4,7 +4,7 @@ class Analysis
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  attr_accessor :min_upvotes, :subreddit
+  attr_accessor :min_upvotes, :subreddit, :reddit_client
 
   validates :min_upvotes,
             presence: true,
@@ -24,6 +24,7 @@ class Analysis
     attributes.each do |k, v|
       send("#{k}=", v)
     end
+    @reddit_client = RedditService.new
   end
 
   def persisted?
@@ -31,27 +32,46 @@ class Analysis
   end
 
   def search
-    posts = RedditService.new(
+    posts = listings
+    if posts.nil?
+      errors.add(:subreddit, 'Must be a valid subreddit.')
+      return nil
+    end
+    posts.each do |post|
+      save_post(post)
+    end
+  end
+
+  private
+
+  def save_post(post)
+    sub_params = sub_params_from_post(post)
+    post_params = post_params_from_post(post)
+    sub = Subreddit.find_by(reddit_id: sub_params[:reddit_id])
+    sub = Subreddit.new(sub_params) if sub.nil?
+    new_post = Post.new(post_params)
+    new_post.subreddit = sub
+    new_post.save
+  end
+
+  def listings
+    @reddit_client.update_params(
       subreddit: @subreddit,
       min_upvotes: @min_upvotes
-    ).listings
-    # byebug
-    # puts reddits
-    posts.each do |post|
-      data = post['data']
-      subreddit_params = { name: data['subreddit'],
-                           reddit_id: data['subreddit_id'] }
-      post_params = { dump: post,
-                      ups: data['ups'],
-                      downs: data['downs'],
-                      reddit_id: data['name'],
-                      post_date_ts: data['created_utc'] }
-      sub = Subreddit.find_by(reddit_id: subreddit_params[:reddit_id])
-      sub = Subreddit.new(subreddit_params) if sub.nil?
-      # sub.save
-      new_post = Post.new(post_params)
-      new_post.subreddit = sub
-      new_post.save
-    end
+    )
+    @reddit_client.listings
+  end
+
+  def post_params_from_post(post)
+    { dump: post,
+      ups: post['data']['ups'],
+      downs: post['data']['downs'],
+      reddit_id: post['data']['name'],
+      post_date_ts: post['data']['created_utc'] }
+  end
+
+  def sub_params_from_post(post)
+    { name: post['data']['subreddit'],
+      reddit_id: post['data']['subreddit_id'] }
   end
 end

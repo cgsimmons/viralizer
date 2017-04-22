@@ -1,3 +1,4 @@
+# Post model
 class Post < ApplicationRecord
   attr_accessor :post_date_ts
   belongs_to :subreddit, autosave: true

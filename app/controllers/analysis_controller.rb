@@ -6,11 +6,7 @@ class AnalysisController < ApplicationController
 
   def create
     @analysis = Analysis.new analysis_params
-    if @analysis.valid?
-      @analysis.search
-    else
-      flash.now[:alert] = 'Please complete the form below.'
-    end
+    @analysis.search if @analysis.valid?
     render :index
   end
 
