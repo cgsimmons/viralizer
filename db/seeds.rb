@@ -13,7 +13,7 @@
 end
 
 5.times do
-  Post.create(ups: (rand(10) + 5), downs: (rand(10) + 5),
+  Post.create(ups: (rand(10) + 5),
               post_date: Faker::Time.between(5.years.ago, Date.today, :all),
               reddit_id: ((rand(1000) + 5).to_s + Faker::GameOfThrones.house),
               subreddit: Subreddit.all.sample)

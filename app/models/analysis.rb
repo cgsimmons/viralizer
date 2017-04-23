@@ -44,21 +44,25 @@ class Analysis
 
   def analyze
     sub = Subreddit.where('lower(name) = ?', @subreddit.downcase).first
-    posts = sub.posts.where('ups > ?', @min_upvotes.to_i)
-    posts_by_hour = posts_by_hour_hash(posts)
-    posts_by_hour['count'] = posts.count
-    posts_by_hour
+    sub.posts.where('ups > ?', @min_upvotes.to_i)
+    # posts = sub.posts.where('ups > ?', @min_upvotes.to_i)
+    # posts_analysis = {}
+    # posts_analysis['by_hour'] = posts_by_hour_hash(posts)
+    # posts_analysis['count'] = posts.count
+    # posts_analysis
   end
 
   private
 
   def posts_by_hour_hash(posts)
-    Hash.new([0, 0, 0]).tap do |h|
+    # Hash.new([0, 0, 0]).tap do |h|
+    Hash.new(0).tap do |h|
       posts.each do |post|
         next if post.nil?
-        tmp = h[post.post_date.hour]
-        tmp[0] += 1
-        tmp[1] += post.ups
+        h[post.post_date.hour] += 1
+        # tmp = h[post.post_date.hour]
+        # tmp[0] += 1
+        # tmp[1] += post.ups
       end
     end
   end
@@ -83,7 +87,6 @@ class Analysis
   def post_params_from_post(post)
     { dump: post,
       ups: post['data']['ups'],
-      downs: post['data']['downs'],
       reddit_id: post['data']['name'],
       post_date_ts: post['data']['created_utc'] }
   end

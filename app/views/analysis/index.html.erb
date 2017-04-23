@@ -1,5 +1,15 @@
 <h1>Enter a subreddit to find the best Viral time</h1>
 <%= render 'form' %>
 <% if @result.nil? != true %>
-<h3><%= "Analyzed #{@result['count']} posts"%></h3>
+  <h3><%= "Analyzed #{@result.count} posts"%></h3>
+  <% @by_hour =  @result.group_by_hour_of_day(:post_date) %>
+
+  <div class="container-fluid chart-container">
+    <%= area_chart @by_hour.sum(:ups), xtitle: 'Hour of the Day', ytitle: 'Up Votes',
+                   label: 'Up Votes'%>
+  </div>
+  <div class="container-fluid chart-container">
+    <%= column_chart @result.group_by_day_of_week(:post_date, format: "%a").count, xtitle: 'Day of the Week', ytitle: 'Number of posts',
+                   label: 'Number of Posts'%>
+  </div>
 <% end %>
