@@ -8,7 +8,7 @@ class RedditService
 
   def update_params(params)
     @subreddit = params[:subreddit]
-    @min_upvotes = params[:min_upvotes].to_i
+    # @min_upvotes = params[:min_upvotes].to_i
   end
 
   def sign_in
@@ -28,8 +28,7 @@ class RedditService
                                                max_size: 500
     rescue RestClient::ExceptionWithResponse => err
       puts "Reddit API Error: #{err}"
-      return nil
     end
-    l.select { |post| post['data']['ups'].to_i > @min_upvotes }
+    l
   end
 end

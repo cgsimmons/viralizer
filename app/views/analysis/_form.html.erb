@@ -4,7 +4,7 @@
         url: analysis_index_path do |f| %>
       <%= f.input :subreddit %>
       <%= f.input :min_upvotes %>
-      <%= f.button :submit %>
+      <%= f.button :button, "Analyze".html_safe, data: { disable_with: "<i class='fa fa-spinner fa-pulse fa-fw'></i> Analyzing..." } %>
     <% end %>
   </div>
 </div>

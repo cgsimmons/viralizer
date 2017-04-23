@@ -1,2 +1,5 @@
 <h1>Enter a subreddit to find the best Viral time</h1>
 <%= render 'form' %>
+<% if @result.nil? != true %>
+<h3><%= "Analyzed #{@result['count']} posts"%></h3>
+<% end %>

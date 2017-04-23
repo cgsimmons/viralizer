@@ -42,7 +42,26 @@ class Analysis
     end
   end
 
+  def analyze
+    sub = Subreddit.where('lower(name) = ?', @subreddit.downcase).first
+    posts = sub.posts.where('ups > ?', @min_upvotes.to_i)
+    posts_by_hour = posts_by_hour_hash(posts)
+    posts_by_hour['count'] = posts.count
+    posts_by_hour
+  end
+
   private
+
+  def posts_by_hour_hash(posts)
+    Hash.new([0, 0, 0]).tap do |h|
+      posts.each do |post|
+        next if post.nil?
+        tmp = h[post.post_date.hour]
+        tmp[0] += 1
+        tmp[1] += post.ups
+      end
+    end
+  end
 
   def save_post(post)
     sub_params = sub_params_from_post(post)
@@ -56,8 +75,7 @@ class Analysis
 
   def listings
     @reddit_client.update_params(
-      subreddit: @subreddit,
-      min_upvotes: @min_upvotes
+      subreddit: @subreddit
     )
     @reddit_client.listings
   end
