@@ -1,7 +1,7 @@
 # Controller for analysis subreddit search
 class AnalysisController < ApplicationController
   def index
-    @analysis ||= Analysis.new
+    @analysis = Analysis.new
   end
 
   def create
@@ -16,6 +16,6 @@ class AnalysisController < ApplicationController
   private
 
   def analysis_params
-    params.require(:analysis).permit([:min_upvotes, :subreddit])
+    params.require(:analysis).permit([:min_upvotes, :subreddit, :time_zone])
   end
 end

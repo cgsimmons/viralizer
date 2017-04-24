@@ -5,11 +5,17 @@
   <% @by_hour =  @result.group_by_hour_of_day(:post_date) %>
 
   <div class="container-fluid chart-container">
-    <%= area_chart @by_hour.sum(:ups), xtitle: 'Hour of the Day', ytitle: 'Up Votes',
-                   label: 'Up Votes'%>
+    <%= area_chart @by_hour.sum(:ups), xtitle: 'Hour of the Day',
+                   ytitle: 'Up Votes', label: 'Up Votes'%>
   </div>
   <div class="container-fluid chart-container">
-    <%= column_chart @result.group_by_day_of_week(:post_date, format: "%a").count, xtitle: 'Day of the Week', ytitle: 'Number of posts',
-                   label: 'Number of Posts'%>
+    <%= column_chart @result.group_by_day_of_week(:post_date, format: "%a").count,
+                     xtitle: 'Day of the Week', ytitle: 'Number of Posts',
+                     label: 'Number of Posts'%>
+  </div>
+  <div class="container-fluid chart-container">
+    <%= line_chart [ { name: 'Total', data: @by_hour.sum(:ups) },
+                     { name: 'Average per Post', data: @by_hour.average(:ups) }
+                   ],  xtitle: 'Hour of the Day', ytitle: 'Up Votes'%>
   </div>
 <% end %>

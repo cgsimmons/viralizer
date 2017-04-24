@@ -17,7 +17,7 @@ class RedditService
                                ENV['REDDIT_ID'],
                                ENV['REDDIT_SECRET'],
                                ENV['REDDIT_USER_AGENT'],
-                               request_throttle: false
+                               request_throttle: true
   end
 
   def listings
