@@ -35,11 +35,12 @@ class Analysis
     posts = listings
     if posts.nil?
       errors.add(:subreddit, 'Must be a valid subreddit.')
-      return nil
+      return false
     end
     posts.each do |post|
       save_post(post)
     end
+    true
   end
 
   def analyze

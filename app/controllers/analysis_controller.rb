@@ -6,9 +6,7 @@ class AnalysisController < ApplicationController
 
   def create
     @analysis = Analysis.new analysis_params
-    if @analysis.valid? && @analysis.search.nil? != true
-      @result = @analysis.analyze
-    end
+    @result = @analysis.analyze if @analysis.valid? && @analysis.search
     render :index
   end
 
