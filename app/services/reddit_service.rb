@@ -3,7 +3,7 @@ require 'reddit/api'
 # Service to connect to reddit api
 class RedditService
   def initialize
-    @session = sign_in
+    sign_in
   end
 
   def update_params(params)
@@ -12,15 +12,22 @@ class RedditService
   end
 
   def sign_in
-    Reddit::Services::User.new ENV['REDDIT_USERNAME'],
-                               ENV['REDDIT_PASSWORD'],
-                               ENV['REDDIT_ID'],
-                               ENV['REDDIT_SECRET'],
-                               ENV['REDDIT_USER_AGENT'],
-                               request_throttle: true
+    @session = Reddit::Services::User.new ENV['REDDIT_USERNAME'],
+                                          ENV['REDDIT_PASSWORD'],
+                                          ENV['REDDIT_ID'],
+                                          ENV['REDDIT_SECRET'],
+                                          ENV['REDDIT_USER_AGENT'],
+                                          request_throttle: true
+  rescue RestClient::ExceptionWithResponse => err
+    puts "Reddit API Authentication Error: #{err}"
+  end
+
+  def signed_in?
+    !@session.nil?
   end
 
   def listings
+    return nil unless signed_in?
     begin
       l = Reddit::Services::Listings.batch_hot @session,
                                                basepath_subreddit: @subreddit,

@@ -24,7 +24,6 @@ class Analysis
     attributes.each do |k, v|
       send("#{k}=", v)
     end
-    @reddit_client = RedditService.new
   end
 
   def persisted?
@@ -47,11 +46,6 @@ class Analysis
     Groupdate.time_zone = @time_zone
     sub = Subreddit.where('lower(name) = ?', @subreddit.downcase).first
     sub.posts.where('ups > ?', @min_upvotes.to_i)
-    # posts = sub.posts.where('ups > ?', @min_upvotes.to_i)
-    # posts_analysis = {}
-    # posts_analysis['by_hour'] = posts_by_hour_hash(posts)
-    # posts_analysis['count'] = posts.count
-    # posts_analysis
   end
 
   private
@@ -62,9 +56,6 @@ class Analysis
       posts.each do |post|
         next if post.nil?
         h[post.post_date.hour] += 1
-        # tmp = h[post.post_date.hour]
-        # tmp[0] += 1
-        # tmp[1] += post.ups
       end
     end
   end
@@ -80,6 +71,8 @@ class Analysis
   end
 
   def listings
+    @reddit_client ||= RedditService.new
+    @reddit_client.sign_in unless @reddit_client.signed_in?
     @reddit_client.update_params(
       subreddit: @subreddit
     )
