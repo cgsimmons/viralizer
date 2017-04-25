@@ -54,7 +54,6 @@ class Analysis
   private
 
   def posts_by_hour_hash(posts)
-    # Hash.new([0, 0, 0]).tap do |h|
     Hash.new(0).tap do |h|
       posts.each do |post|
         next if post.nil?
@@ -96,9 +95,7 @@ class Analysis
   end
 
   def valid_subreddit?
-    puts 'in validate .................................'
     return unless subreddit.present? && INVALID_SUBS.include?(subreddit)
-    puts 'INVALID..............................'
     errors.add(:subreddit,
                "'popular', 'all', and 'random' are reserved by reddit.")
   end
