@@ -13,6 +13,9 @@ class Analysis
               greater_than: 0
             }
   validates :subreddit, presence: true
+  validate :valid_subreddit?
+
+  INVALID_SUBS = %w(random all popular).freeze
 
   class << self
     def all
@@ -83,11 +86,20 @@ class Analysis
     { dump: post,
       ups: post['data']['ups'],
       reddit_id: post['data']['name'],
+      num_comments: post['data']['num_comments'],
       post_date_ts: post['data']['created_utc'] }
   end
 
   def sub_params_from_post(post)
     { name: post['data']['subreddit'],
       reddit_id: post['data']['subreddit_id'] }
+  end
+
+  def valid_subreddit?
+    puts 'in validate .................................'
+    return unless subreddit.present? && INVALID_SUBS.include?(subreddit)
+    puts 'INVALID..............................'
+    errors.add(:subreddit,
+               "'popular', 'all', and 'random' are reserved by reddit.")
   end
 end
