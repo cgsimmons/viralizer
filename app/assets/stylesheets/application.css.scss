@@ -20,6 +20,28 @@
    max-width: 1200px;
  }
 
+ .main-content {
+   margin-top: 2rem;
+ }
+
+ .jumbotron {
+   background: image-url('ocean.jpg') no-repeat center center fixed;
+   background-size: cover;
+   -moz-background-size: cover;
+   -webkit-background-size: cover;
+   -o-background-size: cover;
+   color: white;
+   h1 {
+     font-weight: bold;
+     margin-bottom: 0;
+     line-height: 4.5rem;
+   }
+   p {
+     margin-left: 1.5rem;
+     line-height: 1.7rem;
+   }
+ }
+
  #nav-brand {
    line-height: normal;
    color: #272727;
@@ -45,6 +67,7 @@
    background-color: #cee3f8;
    border: none;
    border-radius: 0;
+   margin: 0;
    .navbar-nav li a{
      color: #272727;
      &:hover {

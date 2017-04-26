@@ -13,10 +13,10 @@
 
     <%= render 'shared/navigation' %>
 
-    <div id="main-container" class="container-fluid">
-      <div class="row">
-        <div class="col-xs-12">
-          <% if notice || alert %>
+    <div id="main-container">
+      <% if notice || alert %>
+        <div class="row">
+          <div class="col-xs-12">
             <div class="alert alert-<%=notice ? "success" : "danger"  %> alert-dismissable" role="alert">
               <%= notice || alert %>
               <button
@@ -24,12 +24,12 @@
                 class="close"
                 data-dismiss="alert"
                 aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
+                <span aria-hidden="true">&times;</span>
+              </button>
             </div>
-          <% end %>
+          </div>
         </div>
-      </div>
+      <% end %>
       <div class="row">
         <div class="col-xs-12">
           <%= yield %>
