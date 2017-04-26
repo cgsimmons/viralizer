@@ -30,6 +30,7 @@
    -moz-background-size: cover;
    -webkit-background-size: cover;
    -o-background-size: cover;
+   padding: 10rem;
    color: white;
    h1 {
      font-weight: bold;
@@ -82,5 +83,11 @@
    }
    .navbar-collapse {
      border-color: #90a4b7;
+   }
+ }
+
+ @media only screen and (max-width: 768px) {
+   .jumbotron {
+     padding: 5rem;
    }
  }
