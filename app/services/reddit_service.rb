@@ -13,7 +13,7 @@ class RedditService
 
   def sign_in
     fail = 1
-    while fail > 0 && fail < 15
+    while fail > 0 && fail < 25
       begin
         @session = Reddit::Services::User.new ENV['REDDIT_USERNAME'],
                                               ENV['REDDIT_PASSWORD'],
