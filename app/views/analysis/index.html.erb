@@ -14,7 +14,7 @@
         <% day = votes_by_day.key(votes_by_day.values.max) %>
         <% hour = votes_average.key(votes_average.values.max).to_s %>
         <ul>
-          <li><p><%= DateTime.strptime("#{day} #{hour}", '%a %I').strftime('%A at %l:00 %P') %></p>
+          <li><p><%= DateTime.strptime("#{day} #{hour}", '%a %H').strftime('%A at %l:00 %P') %></p>
           </li>
         </ul>
       </div>
