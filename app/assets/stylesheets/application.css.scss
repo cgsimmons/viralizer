@@ -22,6 +22,10 @@
 
  #nav-brand {
    line-height: normal;
+   color: #272727;
+   &:hover {
+     background-color: #acd1f6;
+   }
  }
 
  .chart-container {
@@ -35,4 +39,25 @@
 
  .analysis-container {
    padding: 0 2rem 2rem 2rem;
+ }
+
+ .navbar-default {
+   background-color: #cee3f8;
+   border: none;
+   border-radius: 0;
+   .navbar-nav li a{
+     color: #272727;
+     &:hover {
+       background-color: #acd1f6;
+     }
+   }
+   .navbar-toggle {
+     border: 1px solid #90a4b7;
+     &:hover, &:focus {
+       background-color: #89b1da;
+     }
+   }
+   .navbar-collapse {
+     border-color: #90a4b7;
+   }
  }
