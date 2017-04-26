@@ -26,9 +26,13 @@
 
  .chart-container {
    background-color: #e4e9f0;
-   margin: 2rem;
-   padding: 2rem;
-   border-radius: 1rem;
-   box-shadow: 0.25rem 0.25rem #efefef;
-   border: 0.1rem solid #bab5b5;
+   margin: 0 -2rem;
+   padding: 8rem 2rem;
+  //  border-radius: 1rem;
+  //  box-shadow: 0.25rem 0.25rem #efefef;
+  //  border: 0.1rem solid #bab5b5;
+ }
+
+ .analysis-container {
+   padding: 0 2rem 2rem 2rem;
  }

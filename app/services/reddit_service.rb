@@ -13,7 +13,7 @@ class RedditService
 
   def sign_in
     fail = 1
-    while fail > 0 && fail < 10
+    while fail > 0 && fail < 15
       begin
         @session = Reddit::Services::User.new ENV['REDDIT_USERNAME'],
                                               ENV['REDDIT_PASSWORD'],
@@ -39,7 +39,8 @@ class RedditService
       l = Reddit::Services::Listings.batch_hot @session,
                                                basepath_subreddit: @subreddit,
                                                page_size: 100,
-                                               max_size: 500
+                                               max_size: 1000,
+                                               remove_sticky: false
     rescue RestClient::ExceptionWithResponse => err
       puts "Reddit API Request Error: #{err}"
     end
