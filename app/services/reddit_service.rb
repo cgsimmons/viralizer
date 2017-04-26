@@ -20,7 +20,7 @@ class RedditService
                                               ENV['REDDIT_ID'],
                                               ENV['REDDIT_SECRET'],
                                               ENV['REDDIT_USER_AGENT'],
-                                              request_throttle: true
+                                              request_throttle: false
         fail = 0
       rescue RestClient::ExceptionWithResponse => err
         puts "Reddit API Authentication Error: #{err}"
