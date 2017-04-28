@@ -63,7 +63,7 @@ class RedditService
   def hot_pages(first_page, sub)
     array = first_page.to_ary
     next_page = first_page.after
-    while next_page && array.length < 700
+    while next_page && array.length < 500
       tmp_page = sub.hot(after: next_page)
       array.push(*tmp_page.to_ary)
       next_page = tmp_page.after
