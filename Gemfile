@@ -36,6 +36,7 @@ gem 'chartkick'
 gem 'font-awesome-rails'
 gem 'groupdate'
 gem 'reddit-api'
+gem 'resque'
 gem 'simple_form'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
