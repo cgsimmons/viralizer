@@ -40,13 +40,34 @@ class RedditService
 
   def listings
     return nil unless signed_in?
-    l = @session.subreddit(@subreddit)
+    sub = sub_link
+    first_page = first_hot(sub)
+    return [] if first_page.nil?
+    hot_pages(first_page, sub)
+  end
+
+  def sub_link
+    @session.subreddit(@subreddit)
+  end
+
+  def first_hot(sub)
     begin
-      hot = l.hot if l
+      hot = sub.hot(limit: 100) if sub
     rescue JSON::ParserError => err
       puts "Subreddit not found #{err}"
-      return []
+      return nil
     end
-    hot.to_ary if hot
+    hot
+  end
+
+  def hot_pages(first_page, sub)
+    array = first_page.to_ary
+    next_page = first_page.after
+    while next_page && array.length < 700
+      tmp_page = sub.hot(after: next_page)
+      array.push(*tmp_page.to_ary)
+      next_page = tmp_page.after
+    end
+    array
   end
 end
