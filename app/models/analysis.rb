@@ -1,3 +1,4 @@
+
 # Tableless model for search form validations
 class Analysis
   extend ActiveModel::Naming
@@ -35,13 +36,12 @@ class Analysis
 
   def search
     posts = listings
-    if posts.nil?
+    return false if posts.nil?
+    if posts.empty?
       errors.add(:subreddit, 'Must be a valid subreddit.')
       return false
     end
-    posts.each do |post|
-      save_post(post)
-    end
+    save_posts(posts)
     true
   end
 
@@ -53,28 +53,29 @@ class Analysis
 
   private
 
-  def posts_by_hour_hash(posts)
-    Hash.new(0).tap do |h|
-      posts.each do |post|
-        next if post.nil?
-        h[post.post_date.hour] += 1
-      end
+  def save_posts(posts)
+    sub = save_sub(posts.first)
+    posts.each do |post|
+      save_post(post, sub)
     end
   end
 
-  def save_post(post)
-    sub_params = sub_params_from_post(post)
+  def save_post(post, sub)
     post_params = post_params_from_post(post)
-    sub = Subreddit.find_by(reddit_id: sub_params[:reddit_id])
-    sub = Subreddit.new(sub_params) if sub.nil?
     new_post = Post.new(post_params)
     new_post.subreddit = sub
     new_post.save
   end
 
+  def save_sub(post)
+    sub_params = sub_params_from_post(post)
+    sub = Subreddit.find_by(reddit_id: sub_params[:reddit_id])
+    sub = Subreddit.new(sub_params) if sub.nil?
+    sub
+  end
+
   def listings
-    @reddit_client ||= RedditService.new
-    @reddit_client.sign_in unless @reddit_client.signed_in?
+    @reddit_client = RedditService.new
     @reddit_client.update_params(
       subreddit: @subreddit
     )
@@ -82,16 +83,15 @@ class Analysis
   end
 
   def post_params_from_post(post)
-    { dump: post,
-      ups: post['data']['ups'],
-      reddit_id: post['data']['name'],
-      num_comments: post['data']['num_comments'],
-      post_date_ts: post['data']['created_utc'] }
+    { ups: post.ups,
+      reddit_id: post.name,
+      num_comments: post.num_comments,
+      post_date_ts: post.created_utc }
   end
 
   def sub_params_from_post(post)
-    { name: post['data']['subreddit'],
-      reddit_id: post['data']['subreddit_id'] }
+    { name: post.subreddit.display_name,
+      reddit_id: post.subreddit_id }
   end
 
   def valid_subreddit?

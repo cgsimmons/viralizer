@@ -1,9 +1,10 @@
 # app/services/reddit_service.rb
-require 'reddit/api'
+# require 'reddit/api'
+require 'redd'
 # Service to connect to reddit api
 class RedditService
   def initialize
-    @subreddit = 'popular'
+    @subreddit = ''
     sign_in
   end
 
@@ -13,17 +14,21 @@ class RedditService
 
   def sign_in
     fail = 1
-    while fail > 0 && fail < 25
+    while fail > 0 && fail < 3
       begin
-        @session = Reddit::Services::User.new ENV['REDDIT_USERNAME'],
-                                              ENV['REDDIT_PASSWORD'],
-                                              ENV['REDDIT_ID'],
-                                              ENV['REDDIT_SECRET'],
-                                              ENV['REDDIT_USER_AGENT'],
-                                              request_throttle: false
+        @session = Redd.it(
+          username: ENV['REDDIT_USERNAME'],
+          password: ENV['REDDIT_PASSWORD'],
+          client_id: ENV['REDDIT_ID'],
+          secret: ENV['REDDIT_SECRET'],
+          user_agent: ENV['REDDIT_USER_AGENT']
+        )
         fail = 0
-      rescue RestClient::ExceptionWithResponse => err
+      rescue HTTP::TimeoutError => err
         puts "Reddit API Authentication Error: #{err}"
+        fail += 1
+      rescue JSON::ParserError => err
+        puts "Reddit API Sign-in Error: #{err}"
         fail += 1
       end
     end
@@ -35,15 +40,13 @@ class RedditService
 
   def listings
     return nil unless signed_in?
+    l = @session.subreddit(@subreddit)
     begin
-      l = Reddit::Services::Listings.batch_hot @session,
-                                               basepath_subreddit: @subreddit,
-                                               page_size: 100,
-                                               max_size: 500,
-                                               remove_sticky: false
-    rescue RestClient::ExceptionWithResponse => err
-      puts "Reddit API Request Error: #{err}"
+      hot = l.hot if l
+    rescue JSON::ParserError => err
+      puts "Subreddit not found #{err}"
+      return []
     end
-    l
+    hot.to_ary if hot
   end
 end
