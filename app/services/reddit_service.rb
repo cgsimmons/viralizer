@@ -13,25 +13,15 @@ class RedditService
   end
 
   def sign_in
-    fail = 1
-    while fail > 0 && fail < 3
-      begin
-        @session = Redd.it(
-          username: ENV['REDDIT_USERNAME'],
-          password: ENV['REDDIT_PASSWORD'],
-          client_id: ENV['REDDIT_ID'],
-          secret: ENV['REDDIT_SECRET'],
-          user_agent: ENV['REDDIT_USER_AGENT']
-        )
-        fail = 0
-      rescue HTTP::TimeoutError => err
-        puts "Reddit API Authentication Error: #{err}"
-        fail += 1
-      rescue JSON::ParserError => err
-        puts "Reddit API Sign-in Error: #{err}"
-        fail += 1
-      end
-    end
+    @session = Redd.it(
+      username: ENV['REDDIT_USERNAME'], password: ENV['REDDIT_PASSWORD'],
+      client_id: ENV['REDDIT_ID'], secret: ENV['REDDIT_SECRET'],
+      user_agent: ENV['REDDIT_USER_AGENT']
+    )
+  rescue HTTP::TimeoutError => err
+    puts "Reddit API Authentication Error: #{err}"
+  rescue JSON::ParserError => err
+    puts "Reddit API Sign-in Error: #{err}"
   end
 
   def signed_in?

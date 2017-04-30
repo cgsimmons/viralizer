@@ -5,7 +5,7 @@ class Analysis
   include ActiveModel::Conversion
   include ActiveModel::Validations
 
-  attr_accessor :min_upvotes, :subreddit, :time_zone, :reddit_client
+  attr_accessor :min_upvotes, :subreddit, :time_zone, :reddit_client, :sub_id
 
   validates :min_upvotes,
             presence: true,
@@ -47,7 +47,7 @@ class Analysis
 
   def analyze
     Groupdate.time_zone = @time_zone
-    sub = Subreddit.where('lower(name) = ?', @subreddit.downcase).first
+    sub = Subreddit.find_by(reddit_id: @sub_id)
     sub.posts.where('ups > ?', @min_upvotes.to_i)
   end
 
@@ -69,7 +69,8 @@ class Analysis
 
   def save_sub(post)
     sub_params = sub_params_from_post(post)
-    sub = Subreddit.find_by(reddit_id: sub_params[:reddit_id])
+    @sub_id = sub_params[:reddit_id]
+    sub = Subreddit.find_by(reddit_id: @sub_id)
     sub = Subreddit.new(sub_params) if sub.nil?
     sub
   end
