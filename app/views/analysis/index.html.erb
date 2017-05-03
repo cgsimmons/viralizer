@@ -14,7 +14,7 @@
   <% else %>
     <% by_hour =  @result.group_by_hour_of_day(:post_date) %>
     <% votes_average = by_hour.average(:ups) %>
-    <% votes_by_day = @result.group_by_day_of_week(:post_date, format: "%a").count %>
+    <% votes_by_day = @result.group_by_day_of_week(:post_date, format: "%a").sum(:ups) %>
     <% day = votes_by_day.key(votes_by_day.values.max) %>
     <% hour = votes_average.key(votes_average.values.max).to_s %>
       <div class="col-xs-offset-1 suggestion-container">
@@ -44,8 +44,8 @@
 <div class="chart-container" style="background-color: #feecfd;">
   <div class="container-fluid">
   <%= column_chart votes_by_day,
-                   xtitle: 'Day of the Week', ytitle: 'Number of Posts',
-                   label: 'Number of Posts'%>
+                   xtitle: 'Day of the Week', ytitle: 'Total Upvotes',
+                   label: 'Upvotes'%>
   </div>
 </div>
   <% end %>
