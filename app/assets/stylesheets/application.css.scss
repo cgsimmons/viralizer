@@ -20,7 +20,7 @@
    max-width: 1200px;
  }
 
- .main-content {
+ .top-content {
    margin-top: 2rem;
  }
 
@@ -51,17 +51,23 @@
    }
  }
 
+ .analysis-container {
+   padding-top: 0;
+   padding-bottom: 2.5rem;
+ }
+
+ .suggestion-container {
+   margin-top: 2.5rem;
+ }
+
  .chart-container {
    background-color: #e4e9f0;
-   margin: 0 -2rem;
+   width: 100%;
+  //  margin: 0 -2rem;
    padding: 8rem 2rem;
   //  border-radius: 1rem;
   //  box-shadow: 0.25rem 0.25rem #efefef;
   //  border: 0.1rem solid #bab5b5;
- }
-
- .analysis-container {
-   padding: 0 2rem 2rem 2rem;
  }
 
  .navbar-default {
