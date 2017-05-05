@@ -34,9 +34,11 @@ gem 'autoprefixer-rails'
 gem 'bootstrap-sass', '~>3.3'
 gem 'chartkick'
 gem 'font-awesome-rails'
+gem 'foreman'
 gem 'groupdate'
+gem 'rack-timeout'
 gem 'redd'
-gem 'resque'
+gem 'resque', '~> 1.22.0'
 gem 'simple_form'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
