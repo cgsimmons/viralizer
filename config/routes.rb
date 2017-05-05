@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   root 'home#index'
 
   resources :analysis, only: [:index, :create]
+
+  mount ResqueWeb::Engine => '/resque_web' unless Rails.env.production?
 end

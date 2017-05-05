@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '~> 2.3.0'
+
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
   "https://github.com/#{repo_name}.git"
@@ -36,8 +38,10 @@ gem 'chartkick'
 gem 'font-awesome-rails'
 gem 'groupdate'
 gem 'redd'
+gem 'redis'
 gem 'resque'
 gem 'simple_form'
+gem 'sinatra', github: 'sinatra/sinatra', branch: 'master'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -61,6 +65,7 @@ group :development do
   gem 'web-console', '>= 3.3.0'
   # Spring speeds up development by keeping your application running
   #  in the background. Read more: https://github.com/rails/spring
+  gem 'resque-web', require: 'resque_web'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
