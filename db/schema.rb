@@ -19,10 +19,9 @@ ActiveRecord::Schema.define(version: 20170430075434) do
     t.datetime "post_date"
     t.integer  "ups"
     t.string   "reddit_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.integer  "subreddit_id"
-    t.json     "dump",         default: {}, null: false
     t.integer  "num_comments"
     t.index ["subreddit_id"], name: "index_posts_on_subreddit_id", using: :btree
   end
