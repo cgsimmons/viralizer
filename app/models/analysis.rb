@@ -4,16 +4,20 @@ class Analysis
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
+  include ActiveModel::Validations::Callbacks
 
-  attr_accessor :min_upvotes, :subreddit, :time_zone, :reddit_client, :sub_id
+  attr_accessor :min_upvotes, :subreddit, :time_zone, :reddit_client
 
+  VALID_SUBREDDIT_REGEX = /\A[A-Za-z0-9][A-Za-z0-9_]{2,20}\Z/i
+
+  before_validation :downcase_subreddit
   validates :min_upvotes,
             presence: true,
             numericality: {
               only_integer: true,
               greater_than: 0
             }
-  validates :subreddit, presence: true
+  validates :subreddit, presence: true, format: VALID_SUBREDDIT_REGEX
   validate :valid_subreddit?
 
   INVALID_SUBS = %w(random all popular).freeze
@@ -35,6 +39,7 @@ class Analysis
   end
 
   def search
+    return true unless Subreddit.find_by(name: @subreddit).nil?
     posts = listings
     return false if posts.nil?
     if posts.empty?
@@ -47,7 +52,7 @@ class Analysis
 
   def analyze
     Groupdate.time_zone = @time_zone
-    sub = Subreddit.find_by(reddit_id: @sub_id)
+    sub = Subreddit.find_by(name: @subreddit)
     sub.posts.where('ups > ?', @min_upvotes.to_i)
   end
 
@@ -69,8 +74,7 @@ class Analysis
 
   def save_sub(post)
     sub_params = sub_params_from_post(post)
-    @sub_id = sub_params[:reddit_id]
-    sub = Subreddit.find_by(reddit_id: @sub_id)
+    sub = Subreddit.find_by(name: @subreddit)
     sub = Subreddit.new(sub_params) if sub.nil?
     sub
   end
@@ -99,5 +103,9 @@ class Analysis
     return unless subreddit.present? && INVALID_SUBS.include?(subreddit)
     errors.add(:subreddit,
                "'popular', 'all', and 'random' are reserved by reddit.")
+  end
+
+  def downcase_subreddit
+    self.subreddit = subreddit.downcase if subreddit.present?
   end
 end

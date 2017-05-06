@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20170430075434) do
     t.string   "reddit_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["reddit_id"], name: "index_subreddits_on_reddit_id", unique: true, using: :btree
+    t.index ["name"], name: "index_subreddits_on_name", unique: true, using: :btree
   end
 
   add_foreign_key "posts", "subreddits"

@@ -46,6 +46,9 @@ class RedditService
     rescue JSON::ParserError => err
       puts "Subreddit not found #{err}"
       return nil
+    rescue Redd::Forbidden => err
+      puts "Subreddit is forbidden #{err}"
+      return nil
     end
     hot
   end
