@@ -6,7 +6,8 @@ class Analysis
   include ActiveModel::Validations
   include ActiveModel::Validations::Callbacks
 
-  attr_accessor :min_upvotes, :subreddit, :time_zone, :reddit_client
+  attr_accessor :min_upvotes, :subreddit,
+                :time_zone, :reddit_client
 
   VALID_SUBREDDIT_REGEX = /\A[A-Za-z0-9][A-Za-z0-9_]{2,20}\Z/i
 
@@ -38,8 +39,8 @@ class Analysis
     false
   end
 
-  def search
-    return true unless Subreddit.find_by(name: @subreddit).nil?
+  def successful_search?
+    return true unless sub_needs_update?
     posts = listings
     return false if posts.nil?
     if posts.empty?
@@ -57,6 +58,13 @@ class Analysis
   end
 
   private
+
+  def sub_needs_update?
+    sub_record = Subreddit.find_by(name: @subreddit)
+    return true if sub_record.nil? || sub_record.updated_at < 5.days.ago
+    RedditQueryJob.perform_later(@subreddit) if sub_record.updated_at < 1.day.ago
+    false
+  end
 
   def save_posts(posts)
     sub = save_sub(posts.first)

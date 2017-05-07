@@ -23,7 +23,7 @@ class AnalysisController < ApplicationController
   end
 
   def search
-    return @analysis.analyze if @analysis.search
+    return @analysis.analyze if @analysis.successful_search?
     if @analysis.errors.messages.empty?
       flash.now[:alert] = 'Unable to connect to Reddit. ' \
                           'Try again in a few minutes'
