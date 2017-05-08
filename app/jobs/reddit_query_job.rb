@@ -1,7 +1,10 @@
+# Job to process subreddit query through reddit API
 class RedditQueryJob < ApplicationJob
   queue_as :default
 
   def perform(subreddit)
+    sub = Subreddit.find_by(name: subreddit)
+    return unless sub.nil? || sub.updated_at < 1.day.ago
     reddit_client = RedditService.new
     reddit_client.update_params(
       subreddit: subreddit

@@ -2,14 +2,16 @@ require 'resque/tasks'
 
 namespace :resque do
   task :setup do
-    require 'resque'
+    ENV['LOGGING'] = '1'
     ENV['QUEUE'] = '*'
-
-    Resque.redis = 'localhost:6379' unless Rails.env == 'production'
+    Resque.before_fork = proc do
+      ActiveRecord::Base.connection.disconnect!
+    end
+    Resque.after_fork = proc do
+      ActiveRecord::Base.establish_connection
+    end
   end
 end
-
-Resque.after_fork = proc { ActiveRecord::Base.establish_connection }
 
 desc 'Alias for resque:work (To run workers on Heroku)'
 task 'jobs:work' => 'resque:work'
