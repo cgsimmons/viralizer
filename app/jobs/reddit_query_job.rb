@@ -1,6 +1,12 @@
 # Job to process subreddit query through reddit API
 class RedditQueryJob < ApplicationJob
-  queue_as :default
+  queue_as do
+    if arguments.count > 1 && arguments[1] == 'high_priority'
+      :high_priority
+    else
+      :warm_subreddit
+    end
+  end
 
   def perform(subreddit)
     sub = Subreddit.find_by(name: subreddit)

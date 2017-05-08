@@ -3,7 +3,7 @@ require 'resque/tasks'
 namespace :resque do
   task :setup do
     ENV['LOGGING'] = '1'
-    ENV['QUEUE'] = '*'
+    ENV['QUEUE'] = 'high_priority,warm_subreddit'
     Resque.before_fork = proc do
       ActiveRecord::Base.connection.disconnect!
     end
