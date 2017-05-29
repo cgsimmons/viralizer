@@ -57,6 +57,15 @@ class Analysis
     sub.posts.where('ups > ?', @min_upvotes.to_i)
   end
 
+  # Acceptable stale data up to 5 days old is served.
+  # Refresh in background job if between 1 and 5 days old.
+  def save_posts(posts)
+    sub = save_sub(posts.first)
+    posts.each do |post|
+      save_post(post, sub)
+    end
+  end
+
   private
 
   def sub_needs_update?
@@ -64,13 +73,6 @@ class Analysis
     return true if sub_record.nil? || sub_record.updated_at < 5.days.ago
     RedditQueryJob.perform_later(@subreddit) if sub_record.updated_at < 1.day.ago
     false
-  end
-
-  def save_posts(posts)
-    sub = save_sub(posts.first)
-    posts.each do |post|
-      save_post(post, sub)
-    end
   end
 
   def save_post(post, sub)
@@ -83,7 +85,11 @@ class Analysis
   def save_sub(post)
     sub_params = sub_params_from_post(post)
     sub = Subreddit.find_by(name: @subreddit)
-    sub = Subreddit.new(sub_params) if sub.nil?
+    if sub.nil?
+      sub = Subreddit.new(sub_params)
+    else
+      sub.touch # updated_at should be updated
+    end
     sub
   end
 
